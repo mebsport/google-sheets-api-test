@@ -26,6 +26,23 @@ async function writeToSheet(values) {
   }
 }
 
+async function readSheet() {
+  const sheets = google.sheets({ version: 'v4', auth })
+  const spreadsheetId = '1GmoagIZ67WFA90n6MshwoZpvrGofCdjuTzrakEaTteM'
+  const range = 'Sheet1!A1:E10'
+
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range,
+    })
+    const rows = response.data.values
+    return rows
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
 ;(async () => {
   const writer = await writeToSheet([
     ['Name', 'Age', 'Location'],
@@ -35,6 +52,9 @@ async function writeToSheet(values) {
     ['Jill', 24, 'New Haven'],
     ['Jack', 25, 'Hartford'],
     ['Jen', 26, 'New York'],
-  ]);
+  ])
   console.log(writer)
+
+  const data = await readSheet()
+  console.log(data)
 })()
